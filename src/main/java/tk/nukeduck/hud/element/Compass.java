@@ -18,7 +18,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class Compass extends HudElement {
-	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
+	private static final String[] DIRECTIONS = {"*red*", " ", "*green*", " "};
 
 	private final SettingPosition position = new SettingPositionAligned("position", Direction.TOP | Direction.BOTTOM, Direction.flags(Direction.NORTH, Direction.SOUTH));
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
@@ -75,7 +75,16 @@ public class Compass extends HudElement {
 	}
 
 	private void drawDirections(Bounds bounds) {
-		float angle = (float)Math.toRadians(MC.player.rotationYaw);
+//		System.out.println(MC.player.rotationYaw);
+//		float angle = (float)Math.toRadians(MC.player.rotationYaw);
+
+		int nowx = (int) MC.player.posX - 1;
+		int nowz = (int) MC.player.posZ;
+		int spnx = MC.world.getSpawnPoint().getX();
+		int spnz = MC.world.getSpawnPoint().getZ();
+		float angle = (float) (Math.atan2(spnx - nowx, spnz - nowz) * (180.0 / Math.PI));
+		angle = angle + Math.round(MC.player.rotationYaw % 360) + 180;
+		angle = (float)Math.toRadians(angle);
 
 		Point origin = Direction.NORTH.getAnchor(bounds);
 		origin.y += 2;
